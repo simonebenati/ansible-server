@@ -37,3 +37,25 @@
       dest: /home/user/.bashrc
       owner: user
       group: user
+
+  - name: add user bot
+    user:
+      name: bot
+      system: yes
+  - name: setup sudo for bot
+    copy:
+      src: files/sudoer_bot
+      dest: /etc/sudoers.d/bot
+      owner: root
+      group: root
+      mode:  0440
+
+
+  - name: add ansible-pull cron job
+    cron:
+      name: ansible provisioning 
+      user: bot
+      minute: "*/10"
+      job: ansible-pull -o -U https://github.com/simonebenati/ansible-desktop.git
+
+

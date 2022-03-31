@@ -10,7 +10,7 @@
         - htop
         - "{{ apache }}"
         - vim-nox
-        - python3-psutil
+        - apache2
         - docker
 
   - name: add user bot

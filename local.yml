@@ -8,54 +8,29 @@
     package: 
       name: 
         - htop
-        - tmux
+        - apache
         - vim-nox
         - python3-psutil
-
-  - name: copy wallpaper file
-    copy:
-      src: files/wallpaper.jpg
-      dest: /usr/share/backgrounds/ansible-wallpaper.jpg
-      owner: root
-      group: root
-  
-  - name: set wallpaper
-    become_user: user
-    dconf:
-      key: "/org/gnome/desktop/background/picture-uri"
-      value: "'file:///usr/share/backgrounds/ansible-wallpaper.jpg'"
-
-  - name: set wallpaper position
-    become_user: user
-    dconf:
-      key: "/org/gnome/desktop/background/picture-options"
-      value: "'zoom'"
-  
-  - name: copy bashrc file
-    copy:
-      src: files/bashrc
-      dest: /home/user/.bashrc
-      owner: user
-      group: user
+        - docker
 
   - name: add user bot
     user:
       name: bot
       system: yes
+
   - name: setup sudo for bot
     copy:
-      src: files/sudoer_bot
+      src: files/sudoerz
       dest: /etc/sudoers.d/bot
       owner: root
       group: root
       mode:  0440
-
 
   - name: add ansible-pull cron job
     cron:
       name: ansible provisioning 
       user: bot
       minute: "*/10"
-      job: ansible-pull -o -U https://github.com/simonebenati/ansible-desktop.git
+      job: ansible-pull -o -U https://github.com/simonebenati/ansible-server.git
 
 

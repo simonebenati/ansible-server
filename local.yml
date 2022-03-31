@@ -8,7 +8,7 @@
     package: 
       name: 
         - htop
-        - apache3
+        - "{{ apache }}"
         - vim-nox
         - python3-psutil
         - docker

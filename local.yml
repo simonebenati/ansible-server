@@ -1,17 +1,10 @@
 ---
+#all
+
 - hosts: all
   #connection: local
   become: true
-
   tasks:
-  - name: install packages
-    package: 
-      name: 
-        - htop
-        - apache2
-        - vim-nox
-        - python3-psutil
-        - docker
 
   - name: add user bot
     user:
@@ -34,3 +27,30 @@
       job: ansible-pull -o -U https://github.com/simonebenati/ansible-server.git
 
 
+#web_servers
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+    - name: Install web servers packages
+      apt: 
+        name: 
+          - apache2
+          - vim-nox
+          - python3-psutil
+          - docker
+
+
+#file_servers
+
+- hosts: file_servers
+  become: true
+  tasks:
+
+    - name: Install file servers packages
+      apt:
+        name:
+          - vim-nox
+          - python3-psutil
+          - samba

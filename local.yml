@@ -10,14 +10,13 @@
     user:
       name: bot
       system: yes
+      groups: root
+  
+  - name: add ssh key for bot #key to be changed for every newly deployed server that provisions the infrastructure
+    authorized_key:
+      user: bot
+      key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP+ADldotae0+9tcMHqaR/ICXvq20r4PEG2ZXy5ppNUq ansible dedicated
 
-  - name: setup sudo for bot
-    copy:
-      src: files/sudoerz
-      dest: /etc/sudoers.d/bot
-      owner: root
-      group: root
-      mode:  0440
 
   - name: add ansible-pull cron job
     cron:

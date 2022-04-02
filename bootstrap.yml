@@ -1,0 +1,74 @@
+---
+#pre-tasks:
+- hosts: 127.0.0.1
+  connection: local
+  become: true
+  tasks:
+ 
+  - name: Bootstrap > disable ssh auth check
+    lineinfile:
+      path: /home/simo/dev/ansible-server/ansible.cfg
+      regexp: '^host_key_checking = True'
+      line: host_key_checking = False
+
+#all
+
+- hosts: all
+  #connection: local
+  gather_facts: false
+  become: true
+  tasks:
+   
+  - name: Bootstrap check
+    stat:
+      path: /home/bot/bootstrapped-ok
+    register: bootstrap_result
+
+  - name: Maybe terminate play
+    meta: end_host
+    when: bootstrap_result.stat.exists
+    
+  - name: Continue if bootstrap missing
+    debug:
+      msg: "Bootstrap file missing, continuing provisioning"
+
+  - name: Install OS updates
+    apt:
+        upgrade: dist
+        update_cache: yes
+
+  - name: Add user bot
+    user:
+        name: bot
+        system: yes
+        groups: root
+  
+  - name: Add ssh key for bot #key to be changed for every newly deployed server that provisions the infrastructure
+    authorized_key:
+      user: bot
+      key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIP+ADldotae0+9tcMHqaR/ICXvq20r4PEG2ZXy5ppNUq ansible dedicated
+
+  - name: Add ansible-pull cron job
+    cron:
+      name: ansible provisioning 
+      user: bot
+      minute: "*/10"
+      job: ansible-pull -o -U https://github.com/simonebenati/ansible-server.git
+
+  #no code past this line
+  - name: Add proof of bootstrapping
+    file:
+        path: /home/bot/bootstrapped-ok
+        state: touch
+        owner: root
+
+- hosts: 127.0.0.1
+  connection: local
+  become: True
+  tasks:
+
+  - name: Add bootstrap > security check
+    lineinfile:
+      path: /home/simo/dev/ansible-server/ansible.cfg
+      regexp: '^host_key_checking = False'
+      line: host_key_checking = True

@@ -18,3 +18,7 @@ Inside tasks will reside our role specific playbook that contains specific code 
 We will keep at the root of the directory one .yml file that contains all the roles aforementioned so that, ansible will know against which machines to run each role-specific playbook
 
 More on: https://docs.ansible.com/ansible/2.9/user_guide/playbooks_reuse_roles.html
+
+
+
+p.s. More to the project: cloud-init or custom isos to fully automate the administration. Add custom cronjobs to pull / run playbook against hosts.
